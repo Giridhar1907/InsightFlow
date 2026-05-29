@@ -19,15 +19,26 @@ def get_db_connection():
     db_url = os.getenv("DATABASE_URL")
     
     if db_url and POSTGRES_AVAILABLE:
-        # PostgreSQL / Supabase
-        conn = psycopg2.connect(db_url)
-        return conn
-    else:
-        # SQLite local fallback
-        os.makedirs("storage", exist_ok=True)
-        conn = sqlite3.connect(DB_PATH)
-        conn.row_factory = sqlite3.Row
-        return conn
+        # Standardize connection URI for psycopg2
+        if db_url.startswith("postgres://"):
+            db_url = db_url.replace("postgres://", "postgresql://", 1)
+            
+        try:
+            # PostgreSQL / Supabase
+            conn = psycopg2.connect(db_url)
+            return conn
+        except Exception as e:
+            print("=========================================")
+            print("DATABASE CONNECTION ERROR:")
+            print(f"Could not connect to Supabase PostgreSQL: {str(e)}")
+            print("Falling back to local SQLite database to prevent server crash...")
+            print("=========================================")
+            
+    # SQLite local fallback
+    os.makedirs("storage", exist_ok=True)
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
 
 def execute_query(conn, cursor, query: str, params=()):
     """

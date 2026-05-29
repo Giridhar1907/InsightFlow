@@ -17,8 +17,15 @@ from api.routes.insights import router as insights_router
 from api.routes.questions import router as questions_router
 from api.routes.exploration import router as exploration_router
 
-# Initialize Database tables
-init_db()
+# Initialize Database tables safely
+try:
+    init_db()
+except Exception as e:
+    print("=========================================")
+    print("STARTUP SCHEMA INITIALIZATION FAILED:")
+    print(f"Error detail: {str(e)}")
+    print("Proceeding with server startup...")
+    print("=========================================")
 
 app = FastAPI(title="InsightFlow API - SaaS Edition")
 

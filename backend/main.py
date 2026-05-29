@@ -32,8 +32,8 @@ app = FastAPI(title="InsightFlow API - SaaS Edition")
 # In production SaaS, you would restrict allowed origins, but for this setup:
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )

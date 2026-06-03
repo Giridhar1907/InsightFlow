@@ -6,6 +6,8 @@ import { BarChart3, HelpCircle, Loader2, Play, Sparkles, AlertCircle } from "luc
 import { useDashboard } from "../layout";
 import DynamicChart from "@/components/charts/DynamicChart";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 export default function VisualAnalytics() {
   const { activeDatasetName } = useDashboard();
   
@@ -35,7 +37,7 @@ export default function VisualAnalytics() {
     const queryText = `Show ${yAxis} by ${xAxis} using ${aggregation} as a ${chartType} chart`;
 
     try {
-      const response = await axios.post("http://localhost:8000/chart/", {
+      const response = await axios.post(`${API_URL}/chart/`, {
         question: queryText
       }, {
         headers: { Authorization: `Bearer ${token}` }

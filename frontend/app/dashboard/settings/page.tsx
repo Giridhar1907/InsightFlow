@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 import { useDashboard } from "../layout";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 export default function SettingsPage() {
   const { session, refreshSession } = useDashboard();
   
@@ -36,7 +38,7 @@ export default function SettingsPage() {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await axios.get("http://localhost:8000/billing/api-keys", {
+      const response = await axios.get(`${API_URL}/billing/api-keys`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setApiKeys(response.data.api_keys || []);
@@ -59,7 +61,7 @@ export default function SettingsPage() {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await axios.post("http://localhost:8000/billing/api-keys/generate", {}, {
+      const response = await axios.post(`${API_URL}/billing/api-keys/generate`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -83,7 +85,7 @@ export default function SettingsPage() {
     const token = localStorage.getItem("token");
 
     try {
-      await axios.delete(`http://localhost:8000/billing/api-keys/${id}`, {
+      await axios.delete(`${API_URL}/billing/api-keys/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSuccess("API Key revoked successfully.");

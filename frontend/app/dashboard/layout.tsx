@@ -31,6 +31,8 @@ const DashboardContext = createContext<DashboardContextType>({
 
 export const useDashboard = () => useContext(DashboardContext);
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 export default function DashboardLayout({
   children,
 }: {
@@ -47,7 +49,7 @@ export default function DashboardLayout({
     setBypassLoading(true);
     const token = localStorage.getItem("token");
     try {
-      await axios.post("http://localhost:8000/billing/bypass", {}, {
+      await axios.post(`${API_URL}/billing/bypass`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       await fetchSession();
@@ -66,13 +68,13 @@ export default function DashboardLayout({
     }
 
     try {
-      const response = await axios.get("http://localhost:8000/auth/session", {
+      const response = await axios.get(`${API_URL}/auth/session`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSession(response.data);
       
       // Fetch active dataset details to display in top header
-      const datasetsResponse = await axios.get("http://localhost:8000/datasets/", {
+      const datasetsResponse = await axios.get(`${API_URL}/datasets/`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       

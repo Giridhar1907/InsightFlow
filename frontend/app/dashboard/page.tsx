@@ -27,6 +27,8 @@ import {
 } from "lucide-react";
 import { useDashboard } from "./layout";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 export default function DashboardPage() {
   const { session, activeDatasetName } = useDashboard();
 
@@ -36,7 +38,7 @@ export default function DashboardPage() {
     const token = localStorage.getItem("token");
     try {
       // Dynamic endpoint resolving from render or localhost
-      const response = await axios.get("http://localhost:8000/billing/activity", {
+      const response = await axios.get(`${API_URL}/billing/activity`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setChartData(response.data);

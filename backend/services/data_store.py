@@ -28,24 +28,29 @@ def get_df(user_id="guest"):
     
     # Try loading from database
     try:
-        conn = sqlite3.connect("storage/insightflow.db")
-        conn.row_factory = sqlite3.Row
+        from database.database import get_db_connection, execute_query
+        conn = get_db_connection()
         cursor = conn.cursor()
         
-        cursor.execute("SELECT id, file_path FROM datasets WHERE user_id = ? ORDER BY uploaded_at DESC LIMIT 1", (user_id,))
+        execute_query(conn, cursor, "SELECT id, file_path FROM datasets WHERE user_id = ? ORDER BY uploaded_at DESC LIMIT 1", (user_id,))
         row = cursor.fetchone()
+        cursor.close()
         conn.close()
         
-        if row and os.path.exists(row['file_path']):
-            try:
-                df = pd.read_csv(row['file_path'], encoding="latin1")
-            except Exception:
-                df = pd.read_csv(row['file_path'], encoding="utf-8", on_bad_lines="skip")
+        if row:
+            row_id = row[0] if isinstance(row, tuple) else row['id']
+            file_path = row[1] if isinstance(row, tuple) else row['file_path']
             
-            _user_dfs[user_id] = df
-            _active_dataset_ids[user_id] = row['id']
-            current_dataframe = df
-            return df
+            if file_path and os.path.exists(file_path):
+                try:
+                    df = pd.read_csv(file_path, encoding="latin1")
+                except Exception:
+                    df = pd.read_csv(file_path, encoding="utf-8", on_bad_lines="skip")
+                
+                _user_dfs[user_id] = df
+                _active_dataset_ids[user_id] = row_id
+                current_dataframe = df
+                return df
     except Exception as e:
         print("Error autoloading user df:", e)
         

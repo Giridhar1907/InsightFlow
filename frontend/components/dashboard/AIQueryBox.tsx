@@ -10,6 +10,8 @@ interface Props {
   onChart: (chart: any) => void;
 }
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 export default function AIQueryBox({
   question,
   setQuestion,
@@ -39,7 +41,7 @@ export default function AIQueryBox({
 
       const insightResponse =
         await axios.post(
-          "http://localhost:8000/analytics/query",
+          `${API_URL}/analytics/query`,
           {
             question: finalQuestion,
           }
@@ -55,7 +57,7 @@ export default function AIQueryBox({
 
       const chartResponse =
         await axios.post(
-          "http://localhost:8000/chart/",
+          `${API_URL}/chart/`,
           {
             question: finalQuestion,
           }

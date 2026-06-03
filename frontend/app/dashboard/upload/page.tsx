@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { useDashboard } from "../layout";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 export default function DatasetManager() {
   const { activeDatasetName, refreshSession, setActiveDatasetName } = useDashboard();
   
@@ -32,7 +34,7 @@ export default function DatasetManager() {
     if (!token) return;
 
     try {
-      const response = await axios.get("http://localhost:8000/datasets/", {
+      const response = await axios.get(`${API_URL}/datasets/`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setDatasets(response.data.datasets || []);
@@ -60,7 +62,7 @@ export default function DatasetManager() {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await axios.post("http://localhost:8000/datasets/upload", formData, {
+      const response = await axios.post(`${API_URL}/datasets/upload`, formData, {
         headers: { 
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}` 
@@ -98,7 +100,7 @@ export default function DatasetManager() {
     setPreviewLoading(true);
 
     try {
-      const response = await axios.post(`http://localhost:8000/datasets/${id}/select`, {}, {
+      const response = await axios.post(`${API_URL}/datasets/${id}/select`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -108,7 +110,7 @@ export default function DatasetManager() {
         await refreshSession();
         
         // Fetch KPIs or dashboard elements to show data loaded
-        const kpiResponse = await axios.get("http://localhost:8000/kpi/", {
+        const kpiResponse = await axios.get(`${API_URL}/kpi/`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -134,7 +136,7 @@ export default function DatasetManager() {
     const token = localStorage.getItem("token");
 
     try {
-      await axios.delete(`http://localhost:8000/datasets/${id}`, {
+      await axios.delete(`${API_URL}/datasets/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       

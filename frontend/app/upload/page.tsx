@@ -16,6 +16,8 @@ import ExplorationSuggestions from "@/components/dashboard/ExplorationSuggestion
 import DynamicChart from "@/components/charts/DynamicChart";
 import AnalyticsCarousel from "@/components/dashboard/AnalyticsCarousel";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 export default function UploadPage() {
 
   const [file, setFile] =
@@ -93,7 +95,7 @@ export default function UploadPage() {
 
       const response =
         await axios.post(
-          "http://localhost:8000/upload/csv",
+          `${API_URL}/upload/csv`,
           formData
         );
 
@@ -105,7 +107,7 @@ export default function UploadPage() {
 
       const kpiResponse =
         await axios.get(
-          "http://localhost:8000/kpi/"
+          `${API_URL}/kpi/`
         );
 
       setKpis(
@@ -118,7 +120,7 @@ export default function UploadPage() {
 
       const questionsResponse =
         await axios.get(
-          "http://localhost:8000/questions/"
+          `${API_URL}/questions/`
         );
 
       setSuggestedQuestions(
@@ -133,7 +135,7 @@ export default function UploadPage() {
 
       const insightsResponse =
         await axios.get(
-          "http://localhost:8000/insights/"
+          `${API_URL}/insights/`
         );
 
       setAutoInsights(
@@ -148,7 +150,7 @@ export default function UploadPage() {
 
       const executiveResponse =
         await axios.get(
-          "http://localhost:8000/executive-summary/"
+          `${API_URL}/executive-summary/`
         );
 
       setExecutiveSummary(
@@ -163,7 +165,7 @@ export default function UploadPage() {
 
       const explorationResponse =
         await axios.get(
-          "http://localhost:8000/exploration/"
+          `${API_URL}/exploration/`
         );
 
       setExplorationSuggestions(
@@ -180,7 +182,7 @@ export default function UploadPage() {
 
       const autoDashboardResponse =
         await axios.get(
-          "http://localhost:8000/auto-dashboard/"
+          `${API_URL}/auto-dashboard/`
         );
 
       const chartConfigs =
@@ -197,7 +199,7 @@ export default function UploadPage() {
 
         const chartResponse =
           await axios.post(
-            "http://localhost:8000/chart/",
+            `${API_URL}/chart/`,
             {
               question:
                 chart.question,

@@ -20,6 +20,8 @@ interface Message {
   content: string;
 }
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 export default function AIInsights() {
   const { activeDatasetName } = useDashboard();
   
@@ -44,19 +46,19 @@ export default function AIInsights() {
 
     try {
       // 1. Fetch Executive Summary
-      const summaryResponse = await axios.get("http://localhost:8000/executive-summary/", {
+      const summaryResponse = await axios.get(`${API_URL}/executive-summary/`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setExecutiveSummary(summaryResponse.data.summary || "");
 
       // 2. Fetch Auto Insights Highlights
-      const insightsResponse = await axios.get("http://localhost:8000/insights/", {
+      const insightsResponse = await axios.get(`${API_URL}/insights/`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setHighlights(insightsResponse.data.insights || []);
 
       // 3. Fetch Questions Suggestions
-      const questionsResponse = await axios.get("http://localhost:8000/questions/", {
+      const questionsResponse = await axios.get(`${API_URL}/questions/`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSuggestions(questionsResponse.data.questions || []);
@@ -96,7 +98,7 @@ export default function AIInsights() {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await axios.post("http://localhost:8000/analytics/query", {
+      const response = await axios.post(`${API_URL}/analytics/query`, {
         question: queryStr
       }, {
         headers: { Authorization: `Bearer ${token}` }

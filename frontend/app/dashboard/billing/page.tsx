@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { useDashboard } from "../layout";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 export default function BillingPage() {
   const { session, refreshSession } = useDashboard();
   
@@ -72,7 +74,7 @@ export default function BillingPage() {
     // Simulate standard Stripe gateway network latency
     setTimeout(async () => {
       try {
-        const response = await axios.post("http://localhost:8000/billing/upgrade", {
+        const response = await axios.post(`${API_URL}/billing/upgrade`, {
           plan_tier: selectedPlan
         }, {
           headers: { Authorization: `Bearer ${token}` }
